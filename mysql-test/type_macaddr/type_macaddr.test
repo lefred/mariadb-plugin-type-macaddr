@@ -1,0 +1,34 @@
+CREATE TABLE m (m6 MACADDR NOT NULL, m8 MACADDR8 NOT NULL,
+                KEY(m6), KEY(m8));
+INSERT INTO m VALUES
+ ('08:00:2b:01:02:03', '08:00:2b:01:02:03:04:05'),
+ ('08-00-2B-01-02-04', '08-00-2B-01-02-04'),
+ ('0800.2b01.0205', '08002b010205');
+SELECT m6, m8 FROM m ORDER BY m6;
+SELECT CAST('08002b:010203' AS MACADDR),
+       CAST('08002b-0102030405' AS MACADDR8);
+SELECT MACADDR_TRUNC('12:34:56:78:90:ab'),
+       MACADDR8_TRUNC('12:34:56:78:90:ab:cd:ef'),
+       MACADDR8_SET7BIT('00:34:56:ab:cd:ef');
+SELECT CAST('bad address' AS MACADDR) IS NULL,
+       CAST('08:00:2b:01:02:03:04:05' AS MACADDR) IS NULL,
+       CAST('08::00:2b:01:02:03' AS MACADDR) IS NULL;
+
+--echo #
+--echo # Only the group widths PostgreSQL documents are accepted:
+--echo # a separator may split byte-pairs, an OUI (3 bytes) from the
+--echo # remainder, or 4-hex-digit groups -- not any other digit boundary.
+--echo #
+SELECT CAST('aa:bb:ccddee:ff' AS MACADDR) IS NULL,
+       CAST('08:002b:01:0203' AS MACADDR) IS NULL;
+
+--echo #
+--echo # MACADDR_TRUNC()/MACADDR8_TRUNC()/MACADDR8_SET7BIT() accept a raw
+--echo # binary argument of the correct byte length the same way
+--echo # CAST(x'...' AS MACADDR[8]) does, instead of hex-parsing the bytes
+--echo # as text.
+--echo #
+SELECT MACADDR_TRUNC(x'08002b010203'),
+       MACADDR8_TRUNC(x'08002bfffe010203'),
+       MACADDR8_SET7BIT(x'003456778899aabb');
+DROP TABLE m;
