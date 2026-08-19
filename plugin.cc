@@ -19,7 +19,7 @@ static struct st_mariadb_data_type descriptor_macaddr8=
 
 #define MAC_PLUGIN_ENTRY(TYPE, DESCRIPTOR, NAME, DESCRIPTION) \
 { TYPE, DESCRIPTOR, NAME, "lefred", DESCRIPTION, PLUGIN_LICENSE_GPL, \
-  0, 0, 0x0100, NULL, NULL, "1.0.0", MariaDB_PLUGIN_MATURITY_BETA }
+  0, 0, 0x0100, NULL, NULL, "0.1.0", MariaDB_PLUGIN_MATURITY_BETA }
 
 maria_declare_plugin(type_macaddr)
   MAC_PLUGIN_ENTRY(MariaDB_DATA_TYPE_PLUGIN, &descriptor_macaddr,
